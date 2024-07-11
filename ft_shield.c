@@ -81,7 +81,7 @@ int main() {
 		printf("ylabtaim\n");
 		daemonize();
 	} else {
-		printf("Yooooooo\n");
+		run_server();
 	}
 
 	return (0);
