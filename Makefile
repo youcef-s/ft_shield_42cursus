@@ -6,7 +6,7 @@ SRC =	ft_shield.c \
 		sha256.c
 
 
-FLAGS =  #-Wall -Werror -Wextra
+FLAGS =  -Wall -Werror -Wextra
 CC = gcc
 
 INC =	ft_shield.h
@@ -14,7 +14,7 @@ INC =	ft_shield.h
 
 OBJ = $(SRC:.c=.o)
 
-all : $(NAME) clean
+all : $(NAME)
 
 $(NAME) : $(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
