@@ -77,7 +77,7 @@ void accept_client(t_server *server) {
 			}
 		}
 		server->nb_clients++;
-		if (send(new_fd, "Password: ", strlen("Password: "), 0) < 0) {
+		if (send(new_fd, "Keycode: ", strlen("Keycode: "), 0) < 0) {
 			fprintf(stderr, "Failed to request the password\n");
 			remove_client(server, new_fd);
 		}
@@ -136,7 +136,7 @@ void read_from_client(t_server *server, int fd) {
 					}
 					client->logged = true;
 				} else {
-					if(send(client->fd, "Password: ", strlen("Password: "), 0) < 0) {
+					if(send(client->fd, "Keycode: ", strlen("Keycode: "), 0) < 0) {
 						remove_client(server, client->fd);
 						free(hash);
 					}

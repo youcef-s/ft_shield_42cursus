@@ -10,9 +10,6 @@ void duplicate_file() {
 	if (!access("/etc/systemd/system/ft_shield.service", F_OK)) {
 		system("systemctl stop ft_shield");
 	}
-	else if (!access("/etc/init.d/ft_shield", F_OK)) {
-		system("/etc/init.d/ft_shield stop");
-	}
 
 	int ft_shield_fd = open(BIN_PATH, O_CREAT | O_WRONLY | O_TRUNC, 0755);
 	if (ft_shield_fd < 0) {
@@ -31,16 +28,8 @@ void duplicate_file() {
 void create_daemon() {
 	int service_fd = open("/etc/systemd/system/ft_shield.service", O_CREAT | O_WRONLY | O_TRUNC, 0755);
 	if (service_fd < 0) {
-		fprintf(stderr, "Failed to open /etc/systemd/system/ft_shield.service, trying /etc/init.d/ft_shield ...\n");
-		int sysv_fd = open("/etc/init.d/ft_shield", O_CREAT | O_WRONLY | O_TRUNC, 0755);
-		if (sysv_fd < 0) {
-			fprintf(stderr, "Failed to open /etc/init.d/ft_shield\n");
-			exit(1);
-		} else {
-			///TODO: write ft_shield to init.d
-			system("/etc/init.d/ft_shield restart");
-			close(sysv_fd);
-		}
+		fprintf(stderr, "Failed to open /etc/systemd/system/ft_shield.service\n");
+		exit(1);
 	} else {
 		write(service_fd, SYSTEMD_CONFIG, strlen(SYSTEMD_CONFIG));
 		system("systemctl daemon-reload");
